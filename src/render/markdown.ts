@@ -28,11 +28,8 @@ export function renderMarkdown(summary: BriefingSummary): string {
         lines.push(`${repo.repo.description}`, "");
       }
       lines.push(`Commits: ${repo.commits.length}`, "");
-      for (const commit of repo.commits.slice(0, 10)) {
+      for (const commit of repo.commits) {
         lines.push(`- [${commit.shortSha}](${commit.url}) ${commit.message} - ${commit.author}, ${commit.date}`);
-      }
-      if (repo.commits.length > 10) {
-        lines.push(`- ...and ${repo.commits.length - 10} more commit(s).`);
       }
       lines.push("");
     }

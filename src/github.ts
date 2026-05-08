@@ -137,6 +137,9 @@ export async function collectGitHubSnapshot(
     try {
       commits.push(...(await client.fetchCommits(config.org, repo.name, range)));
     } catch (error) {
+      if (isEmptyRepositoryError(error)) {
+        continue;
+      }
       warnings.push({
         scope: repo.name,
         message: errorMessage(error)
@@ -166,4 +169,9 @@ function parseNextLink(link: string | null): string | null {
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function isEmptyRepositoryError(error: unknown): boolean {
+  const message = errorMessage(error);
+  return message.includes("GitHub API 409") && message.includes("Git Repository is empty");
 }

@@ -14,6 +14,7 @@ Optional environment variables:
 
 - `GITHUB_TOKEN`: raises GitHub API limits for public repository reads.
 - `OPENAI_API_KEY`: enables OpenAI-generated comic background art.
+- `FEISHU_APP_ID` and `FEISHU_APP_SECRET`: optional, upload `comic.png` so Feishu can display it as an image message.
 - `GITHUB_BRIEFING_OUT_DIR`: default output directory when `--out` is omitted.
 - `EVOMAP_BRIEFING_OUT_DIR`: backward-compatible alias for older EvoMap-only usage.
 

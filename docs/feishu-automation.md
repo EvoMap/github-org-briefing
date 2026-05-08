@@ -34,6 +34,8 @@ Optional:
 ```powershell
 $env:GITHUB_TOKEN="github token for higher public API limits"
 $env:OPENAI_API_KEY="OpenAI key for generated comic backgrounds"
+$env:FEISHU_APP_ID="cli_xxx"
+$env:FEISHU_APP_SECRET="app secret for uploading comic.png"
 ```
 
 For persistent Windows user environment variables:
@@ -80,7 +82,30 @@ Resend an existing report:
 npm run dev -- send-feishu -- --report reports\2026-05-08
 ```
 
-The current webhook message sends a text summary with local paths to the Markdown, HTML, and comic PNG files. Direct image upload to Feishu requires an application bot with file/image upload permissions and is outside the custom webhook flow.
+The webhook message sends a rich Feishu post with:
+
+- daily conclusion
+- repository and commit counts
+- commit type distribution
+- top contributors
+- active repositories
+- commit links
+- local artifact paths
+
+To display the generated `comic.png` directly in Feishu, configure a Feishu app and set:
+
+```powershell
+$env:FEISHU_APP_ID="cli_xxx"
+$env:FEISHU_APP_SECRET="..."
+```
+
+The CLI will then:
+
+1. request a tenant access token,
+2. upload `reports/YYYY-MM-DD/comic.png`,
+3. send the uploaded `image_key` to the same custom bot webhook.
+
+Without `FEISHU_APP_ID` and `FEISHU_APP_SECRET`, Feishu can only receive the rich text post and local image path. A local Windows path cannot render as an image inside Feishu for other users.
 
 ## 5. Connect to Codex Automation
 
@@ -111,6 +136,8 @@ Optional:
 ```text
 GITHUB_TOKEN
 OPENAI_API_KEY
+FEISHU_APP_ID
+FEISHU_APP_SECRET
 ```
 
 ## 6. Connect to Windows Task Scheduler
@@ -146,6 +173,7 @@ schtasks /Delete /TN GitHubOrgBriefing-EvoMap
 - Message blocked by keyword security: add `GitHub Briefing` as an allowed keyword or disable keyword filtering.
 - GitHub rate limit: set `GITHUB_TOKEN`.
 - Comic uses local fallback: set `OPENAI_API_KEY` if generated comic backgrounds are required.
+- Comic path appears but image does not display: set `FEISHU_APP_ID` and `FEISHU_APP_SECRET` so the CLI can upload `comic.png` to Feishu.
 
 ## 8. Secret Safety Checklist
 

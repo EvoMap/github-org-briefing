@@ -19,31 +19,51 @@ describe("feishu", () => {
   it("sends an existing report with webhook and secret", async () => {
     tmp = await mkdtemp(path.join(os.tmpdir(), "github-org-briefing-feishu-"));
     const report = path.join(tmp, "2026-05-08");
-    await mkdir(report, { recursive: true });
+    await mkdir(path.join(report, "raw"), { recursive: true });
     await writeFile(
-      path.join(report, "brief.md"),
-      [
-        "# Demo GitHub Briefing",
-        "",
-        "## Overview",
-        "- Public repositories checked: 1",
-        "- Active repositories: 1",
-        "## Repository Highlights",
-        "### [demo](https://github.com/example/demo)",
-        "- [abcdef1](https://github.com/example/demo/commit/abcdef1) Add feature - alice, 2026-05-08T00:00:00Z",
-        "## Risks / Watch Notes",
-        "- No fetch warnings.",
-        "## Link Index"
-      ].join("\n"),
+      path.join(report, "raw", "github.json"),
+      JSON.stringify({
+        org: "Demo",
+        fetchedAt: "2026-05-08T00:00:00.000Z",
+        window: {
+          since: "2026-05-07T16:00:00.000Z",
+          until: "2026-05-08T16:00:00.000Z",
+          label: "2026-05-08 full day (Asia/Shanghai)"
+        },
+        repos: [
+          {
+            name: "demo",
+            fullName: "example/demo",
+            htmlUrl: "https://github.com/example/demo",
+            description: null,
+            pushedAt: "2026-05-08T00:00:00.000Z",
+            updatedAt: "2026-05-08T00:00:00.000Z",
+            private: false
+          }
+        ],
+        commits: [
+          {
+            repo: "demo",
+            sha: "abcdef123456",
+            shortSha: "abcdef1",
+            author: "alice",
+            date: "2026-05-08T00:00:00.000Z",
+            message: "feat: add useful briefing",
+            url: "https://github.com/example/demo/commit/abcdef1"
+          }
+        ],
+        warnings: []
+      }),
       "utf8"
     );
 
     const fetchImpl = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
       const body = JSON.parse(String(init?.body)) as Record<string, unknown>;
-      expect(body.msg_type).toBe("text");
+      expect(body.msg_type).toBe("post");
       expect(body.timestamp).toBeDefined();
       expect(body.sign).toBeDefined();
-      expect(JSON.stringify(body)).toContain("Demo GitHub Briefing");
+      expect(JSON.stringify(body)).toContain("日报结论");
+      expect(JSON.stringify(body)).toContain("feat 1");
       return new Response('{"StatusCode":0,"msg":"success"}', { status: 200 });
     }) as unknown as typeof fetch;
 
