@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Org Briefing"
+  short_description: "Generate GitHub organization repository briefings"
+  default_prompt: "Generate a daily GitHub organization briefing."

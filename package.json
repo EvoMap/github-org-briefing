@@ -1,0 +1,31 @@
+{
+  "name": "github-org-briefing",
+  "version": "0.1.0",
+  "description": "Generate daily GitHub organization activity briefings and comic infographics.",
+  "type": "module",
+  "bin": {
+    "github-org-briefing": "./dist/cli.js",
+    "evomap-briefing": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "openai": "^4.104.0",
+    "sharp": "^0.33.5",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
