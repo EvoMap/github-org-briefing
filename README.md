@@ -41,6 +41,8 @@ npm run dev -- send-feishu -- --report reports/2026-05-08
 
 You can also pass `--feishu-webhook` and `--feishu-secret` directly. Prefer environment variables so secrets do not land in shell history.
 
+For the full setup and automation guide, see [docs/feishu-automation.md](docs/feishu-automation.md).
+
 Outputs are written to `reports/YYYY-MM-DD/`:
 
 - `brief.md`
